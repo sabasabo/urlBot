@@ -4,12 +4,13 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.Optional;
 
 public class Bot {
 
-    private class webhookHandler extends TelegramWebhookBot {
+    private static class webhookHandler extends TelegramWebhookBot {
 
         public BotApiMethod onWebhookUpdateReceived(Update update) {
             if (update.hasMessage() && update.getMessage().hasText()) {
@@ -23,19 +24,20 @@ public class Bot {
         }
 
         public String getBotUsername() {
-            return null;
+            return "urlRemoveParametersBot";
         }
 
         public String getBotToken() {
-            return null;
+            return System.getenv("TOKEN");
         }
 
         public String getBotPath() {
-            return null;
+            return System.getenv("HEROKU_URL") + System.getenv("TOKEN");
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TelegramApiRequestException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        telegramBotsApi.registerBot(new webhookHandler());
     }
 }
