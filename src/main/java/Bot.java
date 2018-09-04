@@ -6,7 +6,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import java.util.Optional;
+
 public class Bot {
+
+    private static final String EXTERNAL_URL = System.getenv("HEROKU_URL") + System.getenv("TOKEN");
+    private static final String INTERNAL_URL_AND_PORT = "https://0.0.0.0:" + Optional.ofNullable(System.getenv("PORT")).orElse("8080");
 
     private static class webhookHandler extends TelegramWebhookBot {
 
@@ -30,12 +35,15 @@ public class Bot {
         }
 
         public String getBotPath() {
-            return System.getenv("HEROKU_URL") + System.getenv("TOKEN");
+            return EXTERNAL_URL;
         }
     }
 
     public static void main(String[] args) throws TelegramApiRequestException {
+        System.out.println("EXTERNAL_URL " + EXTERNAL_URL);
+        System.out.println("INTERNAL_URL_AND_PORT " + INTERNAL_URL_AND_PORT);
+        System.out.println("port should be " + System.getenv("PORT"));
         ApiContextInitializer.init();
-        new TelegramBotsApi(System.getenv("HEROKU_URL") + System.getenv("TOKEN"), "0.0.0.0").registerBot(new webhookHandler());
+        new TelegramBotsApi(EXTERNAL_URL, INTERNAL_URL_AND_PORT).registerBot(new webhookHandler());
     }
 }
