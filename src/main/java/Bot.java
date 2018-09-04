@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class Bot {
 
-    private static final String EXTERNAL_URL = System.getenv("HEROKU_URL") + System.getenv("TOKEN");
+    private static final String EXTERNAL_URL = System.getenv("HEROKU_URL");
     private static final String INTERNAL_URL_AND_PORT = "https://0.0.0.0:" + Optional.ofNullable(System.getenv("PORT")).orElse("8080");
 
     private static class webhookHandler extends TelegramWebhookBot {
